@@ -17,6 +17,8 @@ const analogClock = new AnalogClock({
   minuteHandColor: "black",
   secondHandColor: "#D40000",
   edgeColor: "#333333",
+  buildNumber: "XXX_BUILD_NUMBER_XXX",
+  dispBuildNumber: true,
 });
 
 /**  window作成時に実行する初期化メソッド */
@@ -40,7 +42,6 @@ const initClock = () => {
     }
   }
 
-  canvas.addEventListener("touchend", clickEventHandler);
   canvas.addEventListener("click", clickEventHandler);
 
   // キー操作イベント登録

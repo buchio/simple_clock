@@ -200,6 +200,21 @@ class AnalogClock {
     ctx.stroke();
 
     ctx.restore();
+    
+    if (this.settings.dispBuildNumber) {
+      console.log(`BUILD: ${this.settings.buildNumber}`)
+      ctx.save();
+      ctx.fillStyle = this.settings.hourNumberColor;
+      const fontSize = (lineWidth * 1.5).toFixed();
+      ctx.font = `normal ${fontSize}px alial`;
+      ctx.textAlign = "right";
+      ctx.textBaseline = "bottom";
+      ctx.translate(width, height);
+      ctx.fillText(`Analog Clock`, -fontSize, -(fontSize*1.6));
+      ctx.fillText(`Build: ${this.settings.buildNumber}`, -fontSize, -(fontSize*.2));
+      ctx.restore();
+
+    }
   }
 }
 

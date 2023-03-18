@@ -1,3 +1,5 @@
+const buildNumber = (Date.now() / 1000).toFixed()
+
 const gulp = require("gulp");
 
 const gulpBabel = require("gulp-babel");
@@ -41,6 +43,7 @@ const jsBase = ( source, dest ) => {
     .pipe(vinylSourceStream(source.split('/').pop()))
     .pipe(vinylBuffer())
     .pipe(gulpBabel({presets: ["@babel/env"]}))
+    .pipe(gulpReplace("XXX_BUILD_NUMBER_XXX", buildNumber))
     .pipe(gulpUglify())
     .pipe(gulpRename({extname: ".min.js"}))
     .pipe(gulp.dest(`${dest}/`));
