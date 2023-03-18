@@ -57,10 +57,18 @@ const initClock = () => {
     }
   });
 
-  // ウインドウのどこかをクリックするとフルスクリーンにしたり解除した
-  // りする
-  canvas.addEventListener("click", () => {
-    utils.toggleFullscreen();
+  canvas.addEventListener("click", (e) => {
+    const r = Math.sqrt(
+      ((e.x - e.target.width/2)**2) +
+        ((e.y - e.target.height/2)**2));
+
+    if (r < analogClock.radius) {
+      // 文字盤上をクリックしたら表示切り替え
+      analogClock.increaseViewIndex();
+    } else {
+      // 文字盤の外をクリックしたらフルスクリーン切り替え
+      utils.toggleFullscreen();
+    }
   });
 
   // キー操作イベント登録

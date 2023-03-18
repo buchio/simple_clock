@@ -20,6 +20,9 @@ class AnalogClock {
     [false, true, false, 3],
     [false, true, false, 4],
     [false, true, false, 5],
+    [false, true, false, 6],
+    [false, true, false, 7],
+    [false, true, false, 8],
   ];
 
   constructor(settings_) {
@@ -68,6 +71,7 @@ class AnalogClock {
     } else {
       radius = height * this.settings.rates.radius;
     }
+    this.radius = radius;
 
     const ctx = canvas.getContext("2d");
 
