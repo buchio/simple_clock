@@ -19,8 +19,6 @@ const analogClock = new AnalogClock({
   edgeColor: "#333333",
 });
 
-const currentTouches = {};
-
 /**  window作成時に実行する初期化メソッド */
 const initClock = () => {
   const canvas = document.getElementById("clockCanvas");
@@ -28,36 +26,7 @@ const initClock = () => {
   // 背景色を時計の色と合わせる
   canvas.style.backgroundColor = analogClock.settings.backgroundColor;
 
-  canvas.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    console.log(e.changedTouches);
-    for(let i = 0; i < e.changedTouches.length; i++ ) {
-      const identifier = e.changedTouches[i].identifier;
-      if (identifier in currentTouches) {
-        /* eslint-disable-line */
-      } else {
-        /* eslint-disable-line */
-      }
-      console.log("start", e.changedTouches[i].identifier);
-    }
-  });
-
-  canvas.addEventListener("touchmove", (e) => {
-    e.preventDefault();
-    analogClock.increaseViewIndex();
-    console.log(e.changedTouches);
-  });
-
-  canvas.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    utils.toggleFullscreen();
-    console.log(e.changedTouches);
-    for(let i = 0; i < e.changedTouches.length; i++ ) {
-      console.log("end", e.changedTouches[i].identifier);
-    }
-  });
-
-  canvas.addEventListener("click", (e) => {
+  const clickEventHandler = (e) => {
     const r = Math.sqrt(
       ((e.x - e.target.width/2)**2) +
         ((e.y - e.target.height/2)**2));
@@ -69,7 +38,10 @@ const initClock = () => {
       // 文字盤の外をクリックしたらフルスクリーン切り替え
       utils.toggleFullscreen();
     }
-  });
+  }
+
+  canvas.addEventListener("touchend", clickEventHandler);
+  canvas.addEventListener("click", clickEventHandler);
 
   // キー操作イベント登録
   document.addEventListener(
