@@ -78,7 +78,7 @@ const Segment = class {
   }
 };
 
-const SegmentNumber = class {
+class SegmentNumber {
   static segmentPositions = [
     [1, 0, false],
     [0, 1, true],
@@ -124,7 +124,7 @@ const SegmentNumber = class {
     }
     ctx.restore();
   }
-};
+}
 
 const TextNumber = class {
   constructor(clock) {
@@ -219,7 +219,6 @@ const DigitalClock = class {
     const numWidth = clockWidth / 6;
     const numHeight = clockHeight;
 
-    const positions = [];
     const numPosH = (width - clockWidth) / 2;
     const numPosV = (height - clockHeight) / 2;
 
@@ -262,4 +261,6 @@ const DigitalClock = class {
     ctx.arc(x, y, numWidth / 10, 0, Math.PI * 2);
     ctx.fill();
   }
-};
+}
+
+module.exports = {TextNumber, SegmentNumber, DigitalClock};

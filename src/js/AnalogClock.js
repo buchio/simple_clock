@@ -1,4 +1,4 @@
-const AnalogClock = class {
+class AnalogClock {
   static numberList = [
     [
       ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
@@ -68,8 +68,8 @@ const AnalogClock = class {
 
   draw(canvas) {
 
-    const width = canvas.offsetWidth * analogClock.settings.rates.resolution;
-    const height = canvas.offsetHeight * analogClock.settings.rates.resolution;
+    const width = canvas.offsetWidth * this.settings.rates.resolution;
+    const height = canvas.offsetHeight * this.settings.rates.resolution;
     if (canvas.width != width) canvas.width = width;
     if (canvas.height != height) canvas.height = height;
 
@@ -214,4 +214,6 @@ const AnalogClock = class {
 
     ctx.restore();
   }
-};
+}
+
+module.exports = AnalogClock;

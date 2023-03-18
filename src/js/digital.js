@@ -1,3 +1,6 @@
+const {TextNumber, SegmentNumber, DigitalClock} = require("./DigitalClock.js")
+const utils = require("./utils")
+
 const digitalClock = new DigitalClock({
   number: TextNumber,
   foregroundColor: "white",
@@ -24,14 +27,14 @@ const clocks = [sevenSegmentClock, digitalClock];
 let clockIndex = 0;
 
 const initClock = () => {
-  document.querySelector("#digitalClockCanvas").style.backgroundColor =
+
+  document.querySelector("#clockCanvas").style.backgroundColor =
     clocks[clockIndex].settings.backgroundColor;
 
   window.addEventListener("click", () => {
-    toggleFullscreen();
+    utils.toggleFullscreen();
   });
 
-  let viewIndex = 0;
   document.addEventListener(
     "keydown",
     (event) => {
@@ -40,11 +43,11 @@ const initClock = () => {
         if (clockIndex >= clocks.length) {
           clockIndex = 0;
         }
-        document.querySelector("#digitalClockCanvas").style.backgroundColor =
+        document.querySelector("#clockCanvas").style.backgroundColor =
           clocks[clockIndex].settings.backgroundColor;
       }
       if (event.key == "f") {
-        toggleFullscreen();
+        utils.toggleFullscreen();
       }
     },
     false
@@ -53,7 +56,7 @@ const initClock = () => {
 window.addEventListener("load", initClock);
 
 const clock = () => {
-  clocks[clockIndex].draw(document.querySelector("#digitalClockCanvas"));
+  clocks[clockIndex].draw(document.querySelector("#clockCanvas"));
   window.requestAnimationFrame(clock);
 };
 
