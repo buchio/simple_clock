@@ -1,5 +1,3 @@
-const buildNumber = (Date.now() / 1000).toFixed()
-
 const gulp = require("gulp");
 
 const gulpBabel = require("gulp-babel");
@@ -8,6 +6,7 @@ const gulpCleanCSS = require("gulp-clean-css");
 const gulpConcat = require("gulp-concat");
 const gulpCSSlint = require("gulp-csslint");
 const gulpEslint = require("gulp-eslint");
+const gulpPrettier = require("gulp-prettier");
 const gulpRename = require("gulp-rename");
 const gulpReplace = require("gulp-replace");
 const gulpStripImportExport = require("gulp-strip-import-export");
@@ -18,6 +17,11 @@ const vinylBuffer     = require("vinyl-buffer");
 
 const jsSources = "src/js/*.js";
 const cssSources = "src/css/*.css";
+
+const jsFormat = () => {
+  return gulp.src(jsSources)
+    .pipe(gulp.prettier());
+};
 
 const analogCleanTask = () => {
   return gulp.src("dist/AnalogClock", {allowEmpty:true})
@@ -30,7 +34,7 @@ const digitalCleanTask = () => {
 };
 
 const jsLintTask = () => {
-  return gulp.src("src/js/*.js")
+  return gulp.src(jsSources)
     .pipe(gulpEslint({useEslintrc: true}))
     .pipe(gulpEslint.format())
     .pipe(gulpEslint.failAfterError())
@@ -38,6 +42,7 @@ const jsLintTask = () => {
 }
 
 const jsBase = ( source, dest ) => {
+  const buildNumber = (Date.now() / 1000).toFixed()
   return browserify(source)
     .bundle()
     .pipe(vinylSourceStream(source.split('/').pop()))
@@ -58,12 +63,12 @@ const jsDigitalTask = () => {
 };
 
 const cssLintTask = () => {
-  return gulp.src("src/css/*.css")
+  return gulp.src(cssSources)
     .pipe(gulpCSSlint(".csslintrc.json"))
 }
 
 const cssAnalogTask = () => {
-  return gulp.src("src/css/*.css")
+  return gulp.src(cssSources)
     .pipe(gulpConcat("clock.css"))
     .pipe(gulpCleanCSS())
     .pipe(gulpRename({extname: ".min.css"}))
@@ -71,7 +76,7 @@ const cssAnalogTask = () => {
 };
 
 const cssDigitalTask = () => {
-  return gulp.src("src/css/*.css")
+  return gulp.src(cssSources)
     .pipe(gulpConcat("clock.css"))
     .pipe(gulpCleanCSS())
     .pipe(gulpRename({extname: ".min.css"}))
@@ -80,18 +85,18 @@ const cssDigitalTask = () => {
 
 const htmlAnalogTask = () => {
   return gulp.src("src/html/clock.html")
-    .pipe(gulpReplace("CSSNAME", "./clock.min.css"))
-    .pipe(gulpReplace("JSNAME", "./analog.min.js"))
-    .pipe(gulpReplace("NAME", "Analog Clock"))
+    .pipe(gulpReplace("XXX_CSSNAME_XXX", "./clock.min.css"))
+    .pipe(gulpReplace("XXX_JSNAME_XXX", "./analog.min.js"))
+    .pipe(gulpReplace("XXX_NAME_XXX", "Analog Clock"))
     .pipe(gulpRename("index.html"))
     .pipe(gulp.dest("dist/AnalogClock/"));
 };
 
 const htmlDigitalTask = () => {
   return gulp.src("src/html/clock.html")
-    .pipe(gulpReplace("CSSNAME", "./clock.min.css"))
-    .pipe(gulpReplace("JSNAME", "./digital.min.js"))
-    .pipe(gulpReplace("NAME", "Digital Clock"))
+    .pipe(gulpReplace("XXX_CSSNAME_XXX", "./clock.min.css"))
+    .pipe(gulpReplace("XXX_JSNAME_XXX", "./digital.min.js"))
+    .pipe(gulpReplace("XXX_NAME_XXX", "Digital Clock"))
     .pipe(gulpRename("index.html"))
     .pipe(gulp.dest("dist/DigitalClock/"));
 };
@@ -114,13 +119,22 @@ const digitalTasks = gulp.parallel(
   htmlDigitalTask,
   cssDigitalTask);
 
-exports.lint = lintTasks;
-exports.clean = cleanTasks;
-exports.analog = analogTasks;
-exports.digital = digitalTasks;
-  
-exports.default = gulp.series(
+const defaultTask = gulp.series(
   lintTasks,
   cleanTasks,
   gulp.parallel(analogTasks,
                 digitalTasks));
+
+
+exports.format = parallel(jsFormat);
+exports.lint = lintTasks;
+exports.clean = cleanTasks;
+exports.analog = analogTasks;
+exports.digital = digitalTasks;
+exports.default = defaultTask;
+exports.watch = () => {
+  gulp.watch([cssSources,
+         jsSources,
+         "src/html/*.html"],
+        defaultTask);
+};

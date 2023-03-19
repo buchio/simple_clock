@@ -1,4 +1,11 @@
-const Segment = class {
+/**
+ * デジタル時計のセグメントを描画する
+ *
+ * @param {SegmentNumber} number - 7セグ数字を描画するクラス
+ * @param {number} pos - 7セグ中のセグメント位置を表す数字
+ *
+ */
+class Segment {
   constructor(number, pos) {
     this.number = number;
     this.pos = pos;
@@ -76,7 +83,7 @@ const Segment = class {
 
     ctx.restore();
   }
-};
+}
 
 class SegmentNumber {
   static segmentPositions = [
@@ -90,16 +97,16 @@ class SegmentNumber {
   ];
 
   static segmentNumbers = [
-    [true, true, true, false, true, true, true], // 0
-    [false, false, true, false, false, true, false], // 1
-    [true, false, true, true, true, false, true], // 2
-    [true, false, true, true, false, true, true], // 3
-    [false, true, true, true, false, true, false], // 4
-    [true, true, false, true, false, true, true], // 5
-    [true, true, false, true, true, true, true], // 6
-    [true, true, true, false, false, true, false], // 7
-    [true, true, true, true, true, true, true], // 8
-    [true, true, true, true, false, true, true], // 9
+    /* 0 */ [true, true, true, false, true, true, true],
+    /* 1 */ [false, false, true, false, false, true, false],
+    /* 2 */ [true, false, true, true, true, false, true],
+    /* 3 */ [true, false, true, true, false, true, true],
+    /* 4 */ [false, true, true, true, false, true, false],
+    /* 5 */ [true, true, false, true, false, true, true],
+    /* 6 */ [true, true, false, true, true, true, true],
+    /* 7 */ [true, true, true, false, false, true, false],
+    /* 8 */ [true, true, true, true, true, true, true],
+    /* 9 */ [true, true, true, true, false, true, true],
   ];
 
   constructor(clock) {
@@ -126,7 +133,7 @@ class SegmentNumber {
   }
 }
 
-const TextNumber = class {
+class TextNumber {
   constructor(clock) {
     this.clock = clock;
     this.prevNumber = -1;
@@ -178,9 +185,9 @@ const TextNumber = class {
     }
     ctx.restore();
   }
-};
+}
 
-const DigitalClock = class {
+class DigitalClock {
   static numberPositions = [
     [0, 0, 1.0, 1.0],
     [1.0, 0, 1.0, 1.0],
@@ -208,7 +215,7 @@ const DigitalClock = class {
     this.ctx = canvas.getContext("2d");
     const ctx = this.ctx;
 
-    let clockWidth = width * 0.9;
+    let clockWidth = width;
     let clockHeight = (clockWidth * 1.75) / 6;
 
     if (clockHeight > height) {

@@ -1,27 +1,22 @@
 const {TextNumber, SegmentNumber, DigitalClock} = require("./DigitalClock.js")
 const utils = require("./utils")
 
-const digitalClock = new DigitalClock({
-  number: TextNumber,
+let clockSettings = {
+  number: null,
   foregroundColor: "white",
   borderColor: "#111",
   backgroundColor: "black",
   transitionTime: 200,
-});
+  buildNumber: "XXX_BUILD_NUMBER_XXX",
+  dispBuildNumber: true,
+};
 
-const sevenSegmentClock = new DigitalClock({
-  number: SegmentNumber,
-  foregroundColor: "white",
-  borderColor: "#111",
-  backgroundColor: "black",
-  transitionTime: 200,
-  rates: {
-    segmentSpaceHorizontal: 0.0875,
-    segmentSpaceVertical: 0.0875,
-    segmentWidth: 0.15,
-    segmentHeight: 0.045,
-  },
-});
+
+clockSettings.number = TextNumber;
+const digitalClock = new DigitalClock(clockSettings);
+
+clockSettings.number = SegmentNumber;
+const sevenSegmentClock = new DigitalClock(clockSettings);
 
 const clocks = [sevenSegmentClock, digitalClock];
 let clockIndex = 0;

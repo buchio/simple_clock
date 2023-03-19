@@ -26,7 +26,31 @@ class AnalogClock {
   ];
 
   constructor(settings_) {
-    this.settings = settings_;
+    // Default settings.
+    this.settings = {
+      interval: 40,
+      lineWidth: 0.03,
+      radius: 0.5,
+      resolution: 1,
+
+      backgroundColor: "#cccccc",
+      edgeColor: "#333333",
+      hourHandColor: "black",
+      hourNumberColor: "#666666",
+      hourScaleColor: "#666666",
+      minuteHandColor: "black",
+      minuteScaleColor: "#666666",
+      secondHandColor: "#D40000",
+
+      buildNumber: "",
+      dispBuildNumber: false,
+    }
+    for (let key in this.settings) {
+      if (key in settings_) {
+        this.settings[key] = settings_[key];
+      }
+    }
+
     (this.drawHourScale = true),
       (this.drawHourNumber = false),
       (this.drawMinuteScale = false),
@@ -34,8 +58,33 @@ class AnalogClock {
     this.numberListIndex = 0;
 
     this.currentDate = 0;
+
   }
 
+  init(canvas, clickCallback=null) {
+    this.canvas = canvas;
+
+    // 背景色を時計の色と合わせる
+    canvas.style.backgroundColor = this.settings.backgroundColor;
+
+    const clickEventHandler = (e) => {
+      const r = Math.sqrt(
+        ((e.x - e.target.width/2)**2) +
+          ((e.y - e.target.height/2)**2));
+
+      if (this.radius && r < this.radius) {
+        // 文字盤上をクリックしたら表示切り替え
+        this.increaseViewIndex();
+      } else {
+        // 文字盤の外をクリックしたらコールバック呼び出し
+        if (clickCallback) {
+          clickCallback();
+        }
+      }
+    }
+    canvas.addEventListener("click", clickEventHandler);
+  }
+  
   setViewIndex(index) {
     this.viewIndex = index;
     this.drawHourScale = AnalogClock.viewList[this.viewIndex][0];
@@ -52,10 +101,11 @@ class AnalogClock {
     this.setViewIndex(index);
   }
 
-  draw(canvas) {
+  draw() {
+    const canvas = this.canvas;
 
-    const width = canvas.offsetWidth * this.settings.rates.resolution;
-    const height = canvas.offsetHeight * this.settings.rates.resolution;
+    const width = canvas.offsetWidth * this.settings.resolution;
+    const height = canvas.offsetHeight * this.settings.resolution;
     if (canvas.width != width) canvas.width = width;
     if (canvas.height != height) canvas.height = height;
 
@@ -67,9 +117,9 @@ class AnalogClock {
 
     let radius = -1;
     if (width < height) {
-      radius = width * this.settings.rates.radius;
+      radius = width * this.settings.radius;
     } else {
-      radius = height * this.settings.rates.radius;
+      radius = height * this.settings.radius;
     }
     this.radius = radius;
 
@@ -83,7 +133,7 @@ class AnalogClock {
       hour = hour - 12;
     }
 
-    const lineWidth = (radius * this.settings.rates.lineWidth).toFixed();
+    const lineWidth = (radius * this.settings.lineWidth).toFixed();
 
     ctx.save();
     ctx.clearRect(0, 0, width, height);
@@ -202,7 +252,6 @@ class AnalogClock {
     ctx.restore();
     
     if (this.settings.dispBuildNumber) {
-      console.log(`BUILD: ${this.settings.buildNumber}`)
       ctx.save();
       ctx.fillStyle = this.settings.hourNumberColor;
       const fontSize = (lineWidth * 1.5).toFixed();
