@@ -1,16 +1,11 @@
-const {TextNumber, SegmentNumber, DigitalClock} = require("./DigitalClock.js")
-const utils = require("./utils")
+const { TextNumber, SegmentNumber, DigitalClock } = require("./DigitalClock.js");
+const utils = require("./utils");
 
 let clockSettings = {
   number: null,
-  foregroundColor: "white",
-  borderColor: "#111",
-  backgroundColor: "black",
-  transitionTime: 200,
   buildNumber: "XXX_BUILD_NUMBER_XXX",
   dispBuildNumber: true,
 };
-
 
 clockSettings.number = TextNumber;
 const digitalClock = new DigitalClock(clockSettings);
@@ -21,11 +16,13 @@ const sevenSegmentClock = new DigitalClock(clockSettings);
 const clocks = [sevenSegmentClock, digitalClock];
 let clockIndex = 0;
 
-const initClock = () => {
+const anim = () => {
+  clocks[clockIndex].draw();
+  window.requestAnimationFrame(anim);
+};
 
-  document.querySelector("#clockCanvas").style.backgroundColor =
-    clocks[clockIndex].settings.backgroundColor;
-
+const init = () => {
+  clocks[clockIndex].init(document.getElementById("clockCanvas"));
   window.addEventListener("click", () => {
     utils.toggleFullscreen();
   });
@@ -38,8 +35,7 @@ const initClock = () => {
         if (clockIndex >= clocks.length) {
           clockIndex = 0;
         }
-        document.querySelector("#clockCanvas").style.backgroundColor =
-          clocks[clockIndex].settings.backgroundColor;
+        clocks[clockIndex].init(document.getElementById("clockCanvas"));
       }
       if (event.key == "f") {
         utils.toggleFullscreen();
@@ -47,12 +43,6 @@ const initClock = () => {
     },
     false
   );
+  anim();
 };
-window.addEventListener("load", initClock);
-
-const clock = () => {
-  clocks[clockIndex].draw(document.querySelector("#clockCanvas"));
-  window.requestAnimationFrame(clock);
-};
-
-window.requestAnimationFrame(clock);
+window.addEventListener("load", init);

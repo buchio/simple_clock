@@ -44,33 +44,27 @@ class AnalogClock {
 
       buildNumber: "",
       dispBuildNumber: false,
-    }
+    };
     for (let key in this.settings) {
       if (key in settings_) {
         this.settings[key] = settings_[key];
       }
     }
 
-    (this.drawHourScale = true),
-      (this.drawHourNumber = false),
-      (this.drawMinuteScale = false),
-      (this.viewIndex = 0);
+    (this.drawHourScale = true), (this.drawHourNumber = false), (this.drawMinuteScale = false), (this.viewIndex = 0);
     this.numberListIndex = 0;
 
     this.currentDate = 0;
-
   }
 
-  init(canvas, clickCallback=null) {
+  init(canvas, clickCallback = null) {
     this.canvas = canvas;
 
     // 背景色を時計の色と合わせる
     canvas.style.backgroundColor = this.settings.backgroundColor;
 
     const clickEventHandler = (e) => {
-      const r = Math.sqrt(
-        ((e.x - e.target.width/2)**2) +
-          ((e.y - e.target.height/2)**2));
+      const r = Math.sqrt((e.x - e.target.width / 2) ** 2 + (e.y - e.target.height / 2) ** 2);
 
       if (this.radius && r < this.radius) {
         // 文字盤上をクリックしたら表示切り替え
@@ -81,10 +75,10 @@ class AnalogClock {
           clickCallback();
         }
       }
-    }
+    };
     canvas.addEventListener("click", clickEventHandler);
   }
-  
+
   setViewIndex(index) {
     this.viewIndex = index;
     this.drawHourScale = AnalogClock.viewList[this.viewIndex][0];
@@ -201,9 +195,7 @@ class AnalogClock {
     ctx.strokeStyle = this.settings.hourHandColor;
     ctx.fillStyle = this.settings.hourHandColor;
     ctx.save();
-    ctx.rotate(
-      hour * (Math.PI / 6) + (Math.PI / 360) * min + (Math.PI / 21600) * sec
-    );
+    ctx.rotate(hour * (Math.PI / 6) + (Math.PI / 360) * min + (Math.PI / 21600) * sec);
     ctx.lineWidth = lineWidth * 2.5;
     ctx.beginPath();
     ctx.moveTo(-hourHandLength * 0.25, 0);
@@ -250,7 +242,7 @@ class AnalogClock {
     ctx.stroke();
 
     ctx.restore();
-    
+
     if (this.settings.dispBuildNumber) {
       ctx.save();
       ctx.fillStyle = this.settings.hourNumberColor;
@@ -259,10 +251,9 @@ class AnalogClock {
       ctx.textAlign = "right";
       ctx.textBaseline = "bottom";
       ctx.translate(width, height);
-      ctx.fillText(`Analog Clock`, -fontSize, -(fontSize*1.6));
-      ctx.fillText(`Build: ${this.settings.buildNumber}`, -fontSize, -(fontSize*.2));
+      ctx.fillText(`Analog Clock`, -fontSize, -(fontSize * 1.6));
+      ctx.fillText(`Build: ${this.settings.buildNumber}`, -fontSize, -(fontSize * 0.2));
       ctx.restore();
-
     }
   }
 }

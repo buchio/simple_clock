@@ -11,10 +11,10 @@ module.exports = {
   toggleFullscreen: () => {
     const element = document.querySelector("body");
     if (fscreen.fullscreenElement !== null) {
-      console.log('Fullscreen mode');
+      console.log("Fullscreen mode");
       fscreen.exitFullscreen();
     } else {
-      console.log('Not fullscreen mode');
+      console.log("Not fullscreen mode");
       fscreen.requestFullscreen(element);
     }
   },

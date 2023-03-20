@@ -1,19 +1,24 @@
 const AnalogClock = require("./AnalogClock.js");
+const { DigitalClock } = require("./DigitalClock.js");
 const utils = require("./utils.js");
 
 // AnalogClockクラスのインスタンスを作成
-const analogClock = new AnalogClock({
-  buildNumber: "XXX_BUILD_NUMBER_XXX",
-  dispBuildNumber: true,
-});
+const analogClock = new AnalogClock({});
+
+// DigitalClockクラスのインスタンスを作成
+const digitalClock = new DigitalClock({});
 
 const anim = () => {
   analogClock.draw();
+  digitalClock.draw();
   window.requestAnimationFrame(anim);
 };
 
 const init = () => {
-  analogClock.init(document.getElementById("clockCanvas"), utils.toggleFullscreen);
+  const analogCanvas = document.getElementById("analogClockCanvas");
+  const digitalCanvas = document.getElementById("digitalClockCanvas");
+  analogClock.init(analogCanvas, utils.toggleFullscreen);
+  digitalClock.init(digitalCanvas);
   // キー操作イベント登録
   document.addEventListener(
     "keydown",
