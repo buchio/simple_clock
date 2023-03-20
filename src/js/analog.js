@@ -1,5 +1,5 @@
-const AnalogClock = require("./AnalogClock.js");
-const utils = require("./utils.js");
+const AnalogClock = require("./clocks/AnalogClock.js");
+const utils = require("./common/utils.js");
 
 // AnalogClockクラスのインスタンスを作成
 const analogClock = new AnalogClock({

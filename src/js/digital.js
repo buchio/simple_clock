@@ -1,5 +1,5 @@
-const { TextNumber, SegmentNumber, DigitalClock } = require("./DigitalClock.js");
-const utils = require("./utils");
+const { TextNumber, SegmentNumber, DigitalClock } = require("./clocks/DigitalClock.js");
+const utils = require("./common/utils");
 
 let clockSettings = {
   number: null,

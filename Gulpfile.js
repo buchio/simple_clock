@@ -15,9 +15,9 @@ const browserify = require("browserify");
 const vinylSourceStream = require("vinyl-source-stream");
 const vinylBuffer = require("vinyl-buffer");
 
-const jsSources = ["src/js/*.js"];
-const cssSources = ["src/css/*.css"];
-const htmlSources = ["src/html/*.html", "dist/index.html"];
+const jsSources = ["src/**/*.js"];
+const cssSources = ["src/**/*.css"];
+const htmlSources = ["src/**/*.html", "dist/index.html"];
 
 const jsFormat = () => {
   return gulp
