@@ -213,9 +213,8 @@ class DigitalClock {
   ];
 
   constructor(settings) {
-    // Default settings.
-    this.settings = {
-      number: SegmentNumber,
+    const defaultSettings = {
+      number: SegmentNumber, // Assuming SegmentNumber is defined/imported
       foregroundColor: "white",
       borderColor: "#111",
       backgroundColor: "black",
@@ -223,12 +222,8 @@ class DigitalClock {
       buildNumber: null,
       dispBuildNumber: false,
     };
+    this.settings = Object.assign({}, defaultSettings, settings); // Use 'settings' if that's the parameter name
 
-    for (let key in this.settings) {
-      if (key in settings) {
-        this.settings[key] = settings[key];
-      }
-    }
     this.numbers = [];
     for (let i = 0; i < 6; i++) {
       this.numbers.push(new this.settings.number(this));
@@ -301,7 +296,7 @@ class DigitalClock {
       ctx.save();
       ctx.fillStyle = this.settings.foregroundColor;
       const fontSize = (numWidth * 0.07).toFixed();
-      ctx.font = `normal ${fontSize}px alial`;
+      ctx.font = `normal ${fontSize}px arial`;
       ctx.textAlign = "right";
       ctx.textBaseline = "bottom";
       ctx.translate(width, height);
