@@ -53,8 +53,7 @@ const jsLintTask = () => {
     .src(jsSources)
     .pipe(gulpEslint({ useEslintrc: true }))
     .pipe(gulpEslint.format())
-    .pipe(gulpEslint.failAfterError())
-    .pipe(gulpStripImportExport());
+    .pipe(gulpEslint.failAfterError());
 };
 
 const jsBase = (source, dest) => {
@@ -62,6 +61,10 @@ const jsBase = (source, dest) => {
   console.log(source, dest, buildNumber);
   return browserify(source)
     .bundle()
+    .on('error', function (err) { // Add error handler
+      console.error(err.toString());
+      this.emit('end');
+    })
     .pipe(vinylSourceStream(source.split("/").pop()))
     .pipe(vinylBuffer())
     .pipe(gulpBabel({ presets: ["@babel/env"] }))
@@ -88,15 +91,27 @@ const cssLintTask = () => {
 };
 
 const cssAnalogTask = () => {
-  return gulp.src(cssSources).pipe(gulpConcat("clock_base.css")).pipe(gulpCleanCSS()).pipe(gulpRename("clock.min.css")).pipe(gulp.dest("dist/AnalogClock/"));
+  return gulp.src(["src/css/clock_base.css"]) // Only clock_base.css
+    .pipe(gulpConcat("clock_base.css"))
+    .pipe(gulpCleanCSS())
+    .pipe(gulpRename("clock.min.css"))
+    .pipe(gulp.dest("dist/AnalogClock/"));
 };
 
 const cssDigitalTask = () => {
-  return gulp.src(cssSources).pipe(gulpConcat("clock_base.css")).pipe(gulpCleanCSS()).pipe(gulpRename("clock.min.css")).pipe(gulp.dest("dist/DigitalClock/"));
+  return gulp.src(["src/css/clock_base.css"]) // Only clock_base.css
+    .pipe(gulpConcat("clock_base.css"))
+    .pipe(gulpCleanCSS())
+    .pipe(gulpRename("clock.min.css"))
+    .pipe(gulp.dest("dist/DigitalClock/"));
 };
 
 const cssClockTask = () => {
-  return gulp.src(cssSources).pipe(gulpConcat("clock.css")).pipe(gulpCleanCSS()).pipe(gulpRename("clock.min.css")).pipe(gulp.dest("dist/Clock/"));
+  return gulp.src(["src/css/clock_base.css", "src/css/clock.css"]) // clock_base.css and clock.css
+    .pipe(gulpConcat("clock.css"))
+    .pipe(gulpCleanCSS())
+    .pipe(gulpRename("clock.min.css"))
+    .pipe(gulp.dest("dist/Clock/"));
 };
 
 const htmlAnalogTask = () => {
@@ -129,7 +144,11 @@ const htmlClockTask = () => {
     .pipe(gulp.dest("dist/Clock/"));
 };
 
-const cleanTasks = gulp.parallel(analogCleanTask, digitalCleanTask);
+const clockCleanTask = () => {
+  return gulp.src("dist/Clock", { allowEmpty: true }).pipe(gulpClean());
+};
+
+const cleanTasks = gulp.parallel(analogCleanTask, digitalCleanTask, clockCleanTask);
 const lintTasks = gulp.parallel(jsLintTask, cssLintTask);
 const analogTasks = gulp.parallel(jsAnalogTask, htmlAnalogTask, cssAnalogTask);
 const digitalTasks = gulp.parallel(jsDigitalTask, htmlDigitalTask, cssDigitalTask);

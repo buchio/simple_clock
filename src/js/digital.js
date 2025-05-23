@@ -1,17 +1,20 @@
 const { TextNumber, SegmentNumber, DigitalClock } = require("./clocks/DigitalClock.js");
 const utils = require("./common/utils");
 
-let clockSettings = {
-  number: null,
+const baseClockSettings = { // Renamed to avoid confusion
   buildNumber: "XXX_BUILD_NUMBER_XXX",
   dispBuildNumber: true,
 };
 
-clockSettings.number = TextNumber;
-const digitalClock = new DigitalClock(clockSettings);
+const digitalClock = new DigitalClock({
+  ...baseClockSettings,
+  number: TextNumber, // TextNumber should be in scope
+});
 
-clockSettings.number = SegmentNumber;
-const sevenSegmentClock = new DigitalClock(clockSettings);
+const sevenSegmentClock = new DigitalClock({
+  ...baseClockSettings,
+  number: SegmentNumber, // SegmentNumber should be in scope
+});
 
 const clocks = [sevenSegmentClock, digitalClock];
 let clockIndex = 0;
@@ -23,9 +26,6 @@ const anim = () => {
 
 const init = () => {
   clocks[clockIndex].init(document.getElementById("clockCanvas"));
-  window.addEventListener("click", () => {
-    utils.toggleFullscreen();
-  });
 
   document.addEventListener(
     "keydown",

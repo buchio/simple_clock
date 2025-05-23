@@ -26,13 +26,11 @@ class AnalogClock {
   ];
 
   constructor(settings_) {
-    // Default settings.
-    this.settings = {
+    const defaultSettings = {
       interval: 40,
       lineWidth: 0.03,
       radius: 0.5,
       resolution: 1,
-
       backgroundColor: "#cccccc",
       edgeColor: "#333333",
       hourHandColor: "black",
@@ -41,17 +39,15 @@ class AnalogClock {
       minuteHandColor: "black",
       minuteScaleColor: "#666666",
       secondHandColor: "#D40000",
-
       buildNumber: "",
       dispBuildNumber: false,
     };
-    for (let key in this.settings) {
-      if (key in settings_) {
-        this.settings[key] = settings_[key];
-      }
-    }
+    this.settings = Object.assign({}, defaultSettings, settings_);
 
-    (this.drawHourScale = true), (this.drawHourNumber = false), (this.drawMinuteScale = false), (this.viewIndex = 0);
+    this.drawHourScale = true;
+    this.drawHourNumber = false;
+    this.drawMinuteScale = false;
+    this.viewIndex = 0;
     this.numberListIndex = 0;
 
     this.currentDate = 0;
@@ -247,7 +243,7 @@ class AnalogClock {
       ctx.save();
       ctx.fillStyle = this.settings.hourNumberColor;
       const fontSize = (lineWidth * 1.5).toFixed();
-      ctx.font = `normal ${fontSize}px alial`;
+      ctx.font = `normal ${fontSize}px arial`;
       ctx.textAlign = "right";
       ctx.textBaseline = "bottom";
       ctx.translate(width, height);
